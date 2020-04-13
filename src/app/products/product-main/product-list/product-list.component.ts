@@ -24,7 +24,12 @@ export class ProductListComponent implements OnInit
   ngOnInit(): void 
   {
     this.monitoringView = this.location.path() === '/monitoring';
-    
+    this.updateProductList();
+    this.selectedSet = new Set();
+  }
+
+  updateProductList() 
+  {
     this.arrProducts = this.ProductsService.getProducts(); // get all products
     if(this.monitoringView) // if we're in '/monitoring' just keep monitored products
     {
@@ -32,7 +37,6 @@ export class ProductListComponent implements OnInit
       this.arrProducts = this.arrProducts.filter(p => monitoredSet.has(p.uid));
     } 
     this.arrResults = this.arrProducts; // since at first, we'll show all products
-    this.selectedSet = new Set();
   }
 
   search() 
@@ -44,6 +48,13 @@ export class ProductListComponent implements OnInit
         return product.nombre.toUpperCase().indexOf(query) != -1 || product.descripcion.toUpperCase().indexOf(query) != -1;
       });
     }
+  }
+
+  deleteHandler(id: number) {
+    console.log(`in product-list's delete handler`);
+    if(!this.monitoringView) this.ProductsService.deleteProduct(id);
+    
+    this.updateProductList();
   }
 
   selectedHandler(objData) {

@@ -13,7 +13,7 @@
 <div class=" mt-2">
     <!-- RESULTS -->
     <ul class="list-unstyled" *ngFor="let product of arrResults">
-        <app-product [product]=product [checkboxes]=!monitoringView (selected)="selectedHandler($event)"></app-product>
+        <app-product [product]=product [checkboxes]=!monitoringView (selected)="selectedHandler($event)" (deleted)="deleteHandler($event)"></app-product>
     </ul>
 
     <div class="alert alert-danger" role="alert" *ngIf="arrResults.length === 0">

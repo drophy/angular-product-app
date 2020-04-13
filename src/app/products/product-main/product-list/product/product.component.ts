@@ -13,6 +13,7 @@ export class ProductComponent implements OnInit {
   @Input() product: Product;
   @Input() checkboxes: boolean;
   @Output() selected = new EventEmitter();
+  @Output() deleted = new EventEmitter();
 
   constructor() { }
 
@@ -20,6 +21,10 @@ export class ProductComponent implements OnInit {
 
   checkHandler() {
     this.selected.emit({id: this.product.uid, checked: this.checked});
+  }
+
+  deleteHandler() {
+    this.deleted.emit(this.product.uid);
   }
 
 }

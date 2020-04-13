@@ -37,6 +37,17 @@ export class ProductsService {
     return JSON.parse(JSON.stringify(this.arrProducts));
   }
 
+  deleteProduct(id: number) {
+    for(let i = 0; i < this.arrProducts.length; i++) {
+      if(this.arrProducts[i].uid === id) {
+        this.arrProducts.splice(i, 1);
+        break;
+      }
+    }
+
+    this.monitoredProductIdSet.delete(id); // it doesn't matter if it wasn't in there btw
+  }
+
   getMonitoredProdcuts() {
     return new Set([...this.monitoredProductIdSet]);
   }
