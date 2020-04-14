@@ -1,55 +1,60 @@
 <form>
     <div class="media">
         <a class="d-flex align-self-bottom" href="#">
-            <img class="mr-3" src="https://picsum.photos/id/AQUÍ PONER ID/100/100" alt="Generic placeholder image">
+            <img class="mr-3" src={{product.img}} alt="Generic placeholder image">
         </a>
         <div class="media-body">
             <div class="form-group">
                 <label for="">uid (clave de producto)</label>
-                <input type="number" class="form-control" min="0" required>
+                <input type="number" class="form-control" min="0" required value={{product.uid}}>
             </div>
             <div class="form-group">
                 <label for="">Nombre de producto</label>
-                <input type="text" class="form-control" required>
+                <input type="text" class="form-control" required value={{product.nombre}}>
             </div>
             <div class="form-group">
                 <label for="">Marca</label>
-                <select class="form-control" name="marca">
-                    <option value="">Seleccionar una opción</option>
-                    <option> </option>
+                <select class="form-control" name="marca" value={{product.marca}}>
+                    <option value="">Selecciona una marca</option>
+                    <option value="Yen">Yen</option>
+                    <option value="Rocketbook">Rocketbook</option>
+                    <option value="Asmodee">Asmodee</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="">Precio</label>
-                <input type="number" class="form-control" required>
+                <input type="number" class="form-control" required value={{product.precio}}>
             </div>
             <div class="form-group">
                 <label for="">Breve descripción</label>
-                <input type="text" class="form-control" required>
+                <input type="text" class="form-control" required value={{product.descripcion}}>
             </div>
             <div class="form-group">
                 <label for="">Existencia</label>
-                <input type="number" class="form-control" required>
+                <input type="number" class="form-control" required value={{product.existencia}}>
+            </div>
+            <div class="form-group">
+                <label for="">URL de imágen</label>
+                <input type="text" class="form-control" required value={{product.img}}>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-2">
             <label for="">Atributo</label>
-            <input #v1 type="text" class="form-control">
+            <input id="spec-v1" #v1 type="text" class="form-control">
         </div>
         <div class="col-2">
             <label for="">Valor</label>
-            <input #v2 type="text" class="form-control">
+            <input id="spec-v2" #v2 type="text" class="form-control">
         </div>
         <div class="col-2">
             <label for="">Unidad</label>
-            <input #v3 type="text" class="form-control">
+            <input id="spec-v3" #v3 type="text" class="form-control">
         </div>
         <div>
             <label for="" style="color:white">añadir</label>
-            <a name="" id="" class="form-control btn btn-success" href="#" role="button"> <i
-                    class="fas fa-plus-circle    "></i></a>
+            <button type="button" class="form-control btn btn-success" (click)="addSpecHandler()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
         </div>
     </div>
 
@@ -64,17 +69,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td scope="row"></td>
-                    <td></td>
-                    <td></td>
-                    <td><button class="btn btn-primary"><i class="fas fa-trash    "></i></button></td>
+                <tr *ngFor="let spec of product.especificacion; let i = index">
+                    <td scope="row">{{spec.atributo}}</td>
+                    <td>{{spec.valor}}</td>
+                    <td>{{spec.unidad}}</td>
+                    <td><button class="btn btn-primary" (click)="removeSpecHandler(i)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <input type="submit" class="btn btn-primary" value="Guardar">
-    <button class="btn btn-secondary ml-3">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="save()">Guardar</button>
+    <a class="btn btn-secondary ml-3" href="#" routerLink="/product">Cancelar</a>
 
 </form>

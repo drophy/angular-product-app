@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../Product';
 import { ProductsService } from '../../products.service';
 import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -13,27 +14,30 @@ export class ProductListComponent implements OnInit
   monitoringView: boolean;
   
   arrProducts: Product[]; // all products
+  private productSubscription: Subscription;
 
   query: string = '';
   arrResults: Product[]; // products to show
 
   selectedSet: Set<number>;
 
-  constructor(private ProductsService: ProductsService, private location: Location) { }
+  constructor(private productsService: ProductsService, private location: Location) { }
 
   ngOnInit(): void 
   {
     this.monitoringView = this.location.path() === '/monitoring';
     this.updateProductList();
     this.selectedSet = new Set();
+
+    this.productSubscription = this.productsService.productsSubject.subscribe(() => this.updateProductList());
   }
 
   updateProductList() 
   {
-    this.arrProducts = this.ProductsService.getProducts(); // get all products
+    this.arrProducts = this.productsService.getProducts(); // get all products
     if(this.monitoringView) // if we're in '/monitoring' just keep monitored products
     {
-      let monitoredSet = this.ProductsService.getMonitoredProdcuts();
+      let monitoredSet = this.productsService.getMonitoredProdcuts();
       this.arrProducts = this.arrProducts.filter(p => monitoredSet.has(p.uid));
     } 
     this.arrResults = this.arrProducts; // since at first, we'll show all products
@@ -51,10 +55,10 @@ export class ProductListComponent implements OnInit
   }
 
   deleteHandler(id: number) {
-    console.log(`in product-list's delete handler`);
-    if(!this.monitoringView) this.ProductsService.deleteProduct(id);
+    if(!this.monitoringView) this.productsService.deleteProduct(id);
+    else this.productsService.removeFromMonitored(id);
     
-    this.updateProductList();
+    // this.updateProductList(); // shouldn't be needed now that we have the observable
   }
 
   selectedHandler(objData) {
@@ -64,7 +68,7 @@ export class ProductListComponent implements OnInit
 
   addSelected()
   {
-    this.ProductsService.addToMonitored(this.selectedSet);
+    this.productsService.addToMonitored(this.selectedSet);
   }
 
 }

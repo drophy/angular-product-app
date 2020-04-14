@@ -1,1 +1,13 @@
-<p>product-detail works!</p>
+<div class="row">
+    <div class="media col">
+        <img class="mr-3" src={{product.img}} alt="Generic placeholder image">
+        <div class="media-body">
+            <h5 class="mt-0 mb-1 text-secondary">{{product.nombre}}</h5>
+            <p><b>Marca: </b>{{product.marca}}</p>
+            <p><b>Descripción: </b>{{product.descripcion}}</p>
+            <p><b>Precio: </b>{{product.precio}}</p>
+            <p><b>Existencia: </b>{{product.existencia}}</p>
+            <p *ngFor="let spec of product.especificacion"><b>{{spec.atributo}}:</b> {{spec.valor}} <i>{{spec.unidad}}</i></p>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Product, Especificacion } from './Product';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,8 @@ export class ProductsService {
 
   arrProducts : Product[];
   monitoredProductIdSet : Set<number>;
+
+  productsSubject = new Subject<void>();
 
   constructor() { 
     this.arrProducts = [
@@ -33,8 +36,19 @@ export class ProductsService {
     this.monitoredProductIdSet = new Set();
   }
 
+  /// ALL PRODUCTS ///
   getProducts() {
     return JSON.parse(JSON.stringify(this.arrProducts));
+  }
+
+  getProduct(id: number) {
+    console.log(`service got id ${id} with type ${typeof id}`);
+    return JSON.parse(JSON.stringify( this.arrProducts.find(p => p.uid === id) ));
+  }
+
+  addProduct(product: Product) {
+    this.arrProducts.push(product);
+    this.productsSubject.next();
   }
 
   deleteProduct(id: number) {
@@ -44,15 +58,33 @@ export class ProductsService {
         break;
       }
     }
-
     this.monitoredProductIdSet.delete(id); // it doesn't matter if it wasn't in there btw
+
+    this.productsSubject.next();
   }
 
+  editProduct(editedProduct: Product) {
+    let id = editedProduct.uid;
+    for(let i = 0; i < this.arrProducts.length; i++) {
+      if(this.arrProducts[i].uid === id) {
+        this.arrProducts[i] = editedProduct;
+        break;
+      }
+    }
+
+    this.productsSubject.next();
+  }
+
+  /// MONITORED PRODUCTS ///
   getMonitoredProdcuts() {
     return new Set([...this.monitoredProductIdSet]);
   }
 
   addToMonitored(idSet: Set<number>) {
     for(let id of idSet) this.monitoredProductIdSet.add(id);
+  }
+
+  removeFromMonitored(id: number) {
+    this.monitoredProductIdSet.delete(id);
   }
 }
